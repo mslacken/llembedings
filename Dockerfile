@@ -2,7 +2,10 @@ FROM registry.opensuse.org/opensuse/tumbleweed:latest as builder
 
 RUN zypper ar --no-gpgcheck https://download.opensuse.org/repositories/home:/mslacken:/ml/openSUSE_Tumbleweed/home:mslacken:ml.repo && \
     zypper ref  && \
-    zypper install -y python311-gpt4all python311-pypdf python311-faiss-cpu python311-langchain python311-orjson
+    zypper install -y python311-gpt4all python311-pypdf python311-faiss python311-langchain python311-orjson libopenblas_openmp0 && \
+    update-alternatives --set libblas.so.3_x86_64 /usr/lib64/openblas-openmp/libopenblas.so.0 && \
+    update-alternatives --set libcblas.so.3_x86_64 /usr/lib64/openblas-openmp/libopenblas.so.0 && \
+    update-alternatives --set liblapack.so.3_x86_64 /usr/lib64/openblas-openmp/libopenblas.so.0
 
 WORKDIR /build
 
@@ -17,7 +20,7 @@ FROM registry.opensuse.org/opensuse/tumbleweed:latest
 
 RUN zypper ar --no-gpgcheck https://download.opensuse.org/repositories/home:/mslacken:/ml/openSUSE_Tumbleweed/home:mslacken:ml.repo && \
     zypper ref  && \
-    zypper install -y python311-gpt4all python311-pypdf python311-faiss-cpu python311-langchain flask
+    zypper install -y python311-gpt4all python311-pypdf python311-faiss python311-langchain python311-Flask python311-orjson
 
 COPY --from=builder /build/faiss .
 
